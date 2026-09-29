@@ -19,7 +19,7 @@ async function call(path,opts={}){
   if(!r.ok||!data||data.ok===false)throw new ApiError((data&&data.reason)||'bad_reply',(data&&data.message)||('Request failed ('+r.status+')'));
   return data;
 }
-const API={
+export const API={
   isAuthError:e=>AUTH_REASONS.includes(e.reason),
   async login(username,password){
     token=(await call('/api/login',{method:'POST',body:JSON.stringify({username,password})})).token;

@@ -18,7 +18,7 @@ button:focus-visible,input:focus-visible,.row:focus-visible{outline:3px solid va
 .stats div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
 .stats b{display:block;font-size:22px;font-weight:800}.stats span{color:var(--mut);font-size:13px}
 .bar{height:8px;background:var(--track);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green)}
-.row{display:grid;grid-template-columns:1.4fr 1.6fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.row{display:grid;grid-template-columns:1.4fr 1.6fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);cursor:pointer;width:100%;text-align:left;background:transparent;border-left:0;border-right:0;border-bottom:0;color:var(--ink);font:inherit;border-radius:0}
 .row:first-of-type{border-top:0}.row:hover .nm{text-decoration:underline}
 .nm{font-weight:600}.sm{color:var(--mut);font-size:13px}
 .tag{font-size:13px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap}
@@ -32,6 +32,8 @@ svg{width:100%;height:auto;display:block}.svgt{fill:var(--mut);font-size:11px}
 .login{max-width:340px;margin:12vh auto 0}
 input{width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);margin:6px 0 12px}
 .phone-field{display:flex;align-items:center;gap:8px}.phone-field span{padding:0 8px;font-weight:600}.phone-field input{flex:1;min-width:0}
+.form-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}.tenant-form form{display:grid;gap:4px}.tenant-form h2{margin-bottom:8px}
+.header-actions{display:flex;gap:12px;align-items:center}.profile-heading{margin-top:14px}.profile-top{margin:0}.chart-head,.tenants-head{margin-bottom:10px}.tenants-head{margin:0 0 10px}
 .err{color:var(--red);font-weight:600;margin:0 0 12px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:8px;max-width:90vw;font-size:14px}
-@media(max-width:560px){.row{grid-template-columns:1fr auto}.row .bw{grid-column:1/-1;order:3}.stats b{font-size:17px}}
+@media(max-width:560px){.row{grid-template-columns:1fr auto}.row .bw{grid-column:1/-1;order:3}.stats{gap:6px}.stats div{padding:9px 7px}.stats b{font-size:17px}.header-actions{gap:8px}.form-actions button{flex:1}}
