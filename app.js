@@ -1,6 +1,6 @@
 const KES=n=>'KES '+Math.round(n).toLocaleString('en-KE'),$=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let D=null,authed=false,sel=null,mode='year',feed=[],flashId=null,stop=null;
+let D=null,authed=false,sel=null,mode='year',feed=[],flashId=null,stop=null,addingTenant=false;
 const paid=t=>t.payments.reduce((s,p)=>s+p.amount,0),bal=t=>t.rent-paid(t);
 const st=t=>bal(t)<=0?['Paid','ok']:paid(t)>0?['Partial','part']:['Unpaid','due'];
 function toast(m){const e=$('#toast');e.textContent=m;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,3500)}
@@ -14,6 +14,11 @@ function onPayment(ev){const t=D.tenants.find(x=>x.id===ev.tenantId);if(!t)retur
   toast(`M-Pesa: ${KES(ev.amount)} from ${t.name}`);render()}
 async function remind(id){const t=D.tenants.find(x=>x.id===id);
   try{await API.remindTenant(id);toast(`Reminder sent to ${t.name} (${t.phone}) for ${KES(bal(t))}.`)}catch(e){toast('Could not send reminder: '+e.message)}}
+function kenyanPhone(value){const digits=value.replace(/\D/g,'');const national=digits.startsWith('254')?digits.slice(3):digits.startsWith('0')?digits.slice(1):digits;return '254'+national}
+async function addTenant(){const name=$('#tenant-name').value.trim(),phone=kenyanPhone($('#tenant-phone').value);
+  if(!name){toast('Enter the tenant name.');return}
+  if(!/^254[17]\d{8}$/.test(phone)){toast('Enter a valid Kenyan mobile number.');return}
+  try{await API.addTenant(name,phone);D=await API.getOverview();addingTenant=false;toast(`Added ${name}.`);render()}catch(e){toast('Could not add tenant: '+e.message)}}
 function chartYear(t){const W=600,H=230,L=46,B=26,vals=[...t.history,paid(t)],mx=Math.max(t.rent,...vals)*1.1,bw=(W-L)/12,y=v=>H-B-(H-B-12)*v/mx;
   let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Rent paid each month over the past year">`;
   [0,.5,1].forEach(k=>s+=`<text class="svgt" x="${L-6}" y="${y(t.rent*k)+4}" text-anchor="end">${t.rent*k/1000}k</text>`);
@@ -33,7 +38,7 @@ function home(){const T=D.tenants,tp=T.reduce((s,t)=>s+paid(t),0),tr=T.reduce((s
   return `<div class="stats"><div><b>${KES(tp)}</b><span>Collected in ${D.month}</span></div><div><b>${KES(tr-tp)}</b><span>Outstanding</span></div><div><b>${full}/${T.length}</b><span>Tenants fully paid</span></div></div>
   <div class="sec"><div class="bar"><i style="width:${tp/tr*100}%"></i></div></div>
   <div class="sec feed"><h2>Live payments</h2>${feed.length?feed.map(f=>`<p>${f}</p>`).join(''):'<p class="sm">Waiting for the next M-Pesa payment.</p>'}</div>
-  <div class="sec"><h2>Tenants</h2>${rows}</div>`}
+  <div class="sec"><div class="top" style="margin:0 0 10px"><h2>Tenants</h2><button class="pri" onclick="addingTenant=true;render()">Add tenant</button></div>${addingTenant?`<form onsubmit="event.preventDefault();addTenant()"><label>Name<input id="tenant-name" autocomplete="name" required></label><label>Phone number<div class="phone-field"><span>254</span><input id="tenant-phone" type="tel" inputmode="numeric" placeholder="712 345 678" maxlength="14" required></div></label><button class="pri" type="submit">Save tenant</button> <button type="button" onclick="addingTenant=false;render()">Cancel</button></form>`:''}${rows}</div>`}
 function profile(t){const b=bal(t),[l,c]=st(t);
   return `<button onclick="sel=null;render()">Back to tenants</button>
   <div class="sec" style="margin-top:14px"><div class="top" style="margin:0"><div><h2>${esc(t.name)}</h2><div class="sm">Unit ${esc(t.unit)} · ${esc(t.phone)}</div></div><span class="tag ${c}">${l}</span></div></div>
