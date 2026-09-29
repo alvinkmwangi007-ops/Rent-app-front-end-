@@ -32,5 +32,6 @@ svg{width:100%;height:auto;display:block}.svgt{fill:var(--mut);font-size:11px}
 .login{max-width:340px;margin:12vh auto 0}
 input{width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);margin:6px 0 12px}
 .phone-field{display:flex;align-items:center;gap:8px}.phone-field span{padding:0 8px;font-weight:600}.phone-field input{flex:1;min-width:0}
+.err{color:var(--red);font-weight:600;margin:0 0 12px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:8px;max-width:90vw;font-size:14px}
 @media(max-width:560px){.row{grid-template-columns:1fr auto}.row .bw{grid-column:1/-1;order:3}.stats b{font-size:17px}}
